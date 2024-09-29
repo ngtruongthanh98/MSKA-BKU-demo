@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { translateImage } from '@/utils/api.ts';
+import { translateImage, googleTranslate } from '@/utils/api.ts';
 
 interface VideoCardProps {
   videoSrc: string;
@@ -23,8 +23,13 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
 
   const recognizeSignLanguage = async (imageName: string): Promise<string> => {
     try {
-      const response = await translateImage(imageName);
-      setOriginalText(response);
+      let response = await translateImage(imageName);
+
+      const capitalized =
+      response.charAt(0).toUpperCase()
+    + response.slice(1)
+
+      setOriginalText(capitalized);
       return response;
     } catch (error) {
       console.error('Error recognizing sign language:', error);
@@ -33,12 +38,13 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
   };
 
   const translateToSpokenLanguage = async (text: string): Promise<string> => {
-    // Mock data for translation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve('Hola, ¿cómo estás?');
-      }, 2000);
-    });
+    try {
+      const translatedText = await googleTranslate(text, 'en');
+      return translatedText;
+    } catch (error) {
+      console.error('Error translating text:', error);
+      throw error;
+    }
   };
 
   return (
