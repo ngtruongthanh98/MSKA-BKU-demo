@@ -37,11 +37,13 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, onDelete }) => {
 
   return (
     <div className="mt-4">
-      <video
-        src={videoSrc}
-        controls
-        className="max-w-full"
-      />
+      <div className="flex justify-center">
+        <video
+          src={videoSrc}
+          controls
+          className="max-w-full"
+        />
+      </div>
       <button
         onClick={onDelete}
         className="px-4 py-2 mt-2 text-white bg-red-500 rounded"
