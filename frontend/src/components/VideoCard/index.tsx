@@ -78,7 +78,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
         <div className="mt-2 text-center text-blue-500">Loading...</div>
       )}
       {translation && (
-        <div className="p-6 mt-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
+        <div className="p-6 mt-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-800">
           <div>
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">German Text:</h3>
             <p className="mt-1 text-gray-600 dark:text-gray-400">{originalText}</p>
