@@ -28,7 +28,7 @@ const IndexPage: React.FC = () => {
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
         <div className="justify-center inline-block max-w-lg text-center">
-          <h1 className="text-4xl font-bold">Upload Your Sign Language Video</h1>
+          <h1 className="text-4xl font-bold">Upload Sign Language Video</h1>
           <input
             type="file"
             accept="video/*"
