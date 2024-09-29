@@ -8,8 +8,8 @@ app.use(cors()); // Enable CORS
 app.use(express.json());
 
 // Routes
-const translateRoute = require('./routes/translateRoute');
-app.use('/api/translate', translateRoute);
+const translateRoute = require('./routes/signLanguageTranslateRoute');
+app.use('/api/sl-translate', translateRoute);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
