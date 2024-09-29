@@ -4,6 +4,7 @@ import VideoCard from '@/components/VideoCard';
 
 const IndexPage: React.FC = () => {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
+  const [videoName, setVideoName] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -11,6 +12,7 @@ const IndexPage: React.FC = () => {
     if (file) {
       const videoURL = URL.createObjectURL(file);
       setVideoSrc(videoURL);
+      setVideoName(file.name);
     }
   };
 
@@ -18,6 +20,7 @@ const IndexPage: React.FC = () => {
     if (videoSrc) {
       URL.revokeObjectURL(videoSrc);
       setVideoSrc(null);
+      setVideoName(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -36,8 +39,8 @@ const IndexPage: React.FC = () => {
             className="mt-4"
             ref={fileInputRef}
           />
-          {videoSrc && (
-            <VideoCard videoSrc={videoSrc} onDelete={handleDeleteVideo} />
+          {videoSrc && videoName && (
+            <VideoCard videoSrc={videoSrc} videoName={videoName} onDelete={handleDeleteVideo} />
           )}
         </div>
       </section>
