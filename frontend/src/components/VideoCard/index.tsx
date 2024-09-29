@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { translateImage } from '@/utils/api.ts';
+
 interface VideoCardProps {
   videoSrc: string;
   videoName: string;
@@ -7,6 +9,7 @@ interface VideoCardProps {
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) => {
+  const [originalText, setOriginalText] = useState<string>('');
   const [translation, setTranslation] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -18,15 +21,15 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
     setLoading(false);
   };
 
-  const recognizeSignLanguage = async (text: string): Promise<string> => {
-    // Mock data for sign language recognition
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log('Recognizing sign language: ', text);
-
-        resolve('Hello, how are you?');
-      }, 2000);
-    });
+  const recognizeSignLanguage = async (imageName: string): Promise<string> => {
+    try {
+      const response = await translateImage(imageName);
+      setOriginalText(response);
+      return response;
+    } catch (error) {
+      console.error('Error recognizing sign language:', error);
+      throw error;
+    }
   };
 
   const translateToSpokenLanguage = async (text: string): Promise<string> => {
@@ -69,9 +72,15 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
         <div className="mt-2 text-center text-blue-500">Loading...</div>
       )}
       {translation && (
-        <div className="p-4 mt-4 bg-gray-100 rounded dark:bg-gray-800">
-          <h2 className="text-xl font-bold">Translation:</h2>
-          <p>{translation}</p>
+        <div className="p-6 mt-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">German Text:</h3>
+            <p className="mt-1 text-gray-600 dark:text-gray-400">{originalText}</p>
+          </div>
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">English Text:</h3>
+            <p className="mt-1 text-gray-600 dark:text-gray-400">{translation}</p>
+          </div>
         </div>
       )}
     </div>
