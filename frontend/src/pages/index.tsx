@@ -12,7 +12,7 @@ const IndexPage: React.FC = () => {
     if (file) {
       const videoURL = URL.createObjectURL(file);
       setVideoSrc(videoURL);
-      setVideoName(file.name);
+      setVideoName(file.name.replace('.mp4', ''));
     }
   };
 
