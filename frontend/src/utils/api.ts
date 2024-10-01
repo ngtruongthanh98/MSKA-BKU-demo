@@ -32,3 +32,20 @@ export async function googleTranslate(text: string, target: string): Promise<str
   const data = await response.json();
   return data.translatedText;
 }
+
+export async function getVideo(videoName: string): Promise<string> {
+  const response = await fetch('http://localhost:3000/api/get-video', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ videoName }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+
+  const data = await response.json();
+  return data.videoUrl;
+}

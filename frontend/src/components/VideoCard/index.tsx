@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { translateImage, googleTranslate } from '@/utils/api.ts';
+import { translateImage, googleTranslate, getVideo } from '@/utils/api.ts';
 
 interface VideoCardProps {
   videoSrc: string;
@@ -46,6 +46,16 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
       throw error;
     }
   };
+
+  const doGetVideo = async (videoName: string): Promise<string> => {
+    try {
+      const videoUrl = await getVideo(videoName);
+      return videoUrl;
+    } catch (error) {
+      console.error('Error getting video:', error);
+      throw error;
+    }
+  }
 
   return (
     <div className="mt-4">

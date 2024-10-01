@@ -43,6 +43,14 @@ const IndexPage: React.FC = () => {
             <VideoCard videoSrc={videoSrc} videoName={videoName} onDelete={handleDeleteVideo} />
           )}
         </div>
+
+        {/* <div>
+          <video
+            src="https://storage.googleapis.com/bkuphoenix14t/27August_2009_Thursday_tagesschau-3267.mp4"
+            controls
+            className="max-w-full"
+          />
+        </div> */}
       </section>
     </DefaultLayout>
   );

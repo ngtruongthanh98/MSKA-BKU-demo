@@ -14,6 +14,9 @@ app.use('/api/sl-translate', translateRoute);
 const googleTranslateRoute = require('./routes/googleTranslateRoute');
 app.use('/api/google-translate', googleTranslateRoute);
 
+const getVideoRoute = require('./routes/getVideoRoute');
+app.use('/api/get-video', getVideoRoute);
+
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
