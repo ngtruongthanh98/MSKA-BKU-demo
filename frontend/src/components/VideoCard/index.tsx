@@ -15,10 +15,15 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
 
   const handleTranslate = async () => {
     setLoading(true);
-    const recognizedText = await recognizeSignLanguage(videoName);
-    const translatedText = await translateToSpokenLanguage(recognizedText);
-    setTranslation(translatedText);
-    setLoading(false);
+    try {
+      const recognizedText = await recognizeSignLanguage(videoName);
+      const translatedText = await translateToSpokenLanguage(recognizedText);
+      setTranslation(translatedText);
+    } catch (error) {
+      console.error('Error during translation process:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const recognizeSignLanguage = async (imageName: string): Promise<string> => {
