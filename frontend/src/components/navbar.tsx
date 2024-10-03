@@ -97,7 +97,7 @@ export const Navbar = () => {
 
       <NavbarMenu>
         {searchInput}
-        <div className="flex flex-col gap-2 mx-4 mt-2">
+        {/* <div className="flex flex-col gap-2 mx-4 mt-2">
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
@@ -115,7 +115,7 @@ export const Navbar = () => {
               </Link>
             </NavbarMenuItem>
           ))}
-        </div>
+        </div> */}
       </NavbarMenu>
     </NextUINavbar>
   );
