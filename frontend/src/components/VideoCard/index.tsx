@@ -1,6 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+  translateImage,
+  googleTranslate,
+  // getVideo
+} from '@/utils/api.ts';
 
-import { translateImage, googleTranslate, getVideo } from '@/utils/api.ts';
+declare global {
+  interface Window {
+    talkify: any;
+  }
+}
 
 interface VideoCardProps {
   videoSrc: string;
@@ -12,6 +21,21 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
   const [originalText, setOriginalText] = useState<string>('');
   const [translation, setTranslation] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Initialize Talkify
+    if (window.talkify) {
+      window.talkify.config.remoteService.host = 'https://talkify.net';
+      window.talkify.config.remoteService.apiKey = 'c889183e-dbeb-4012-9d6e-13a12eb291ae';
+      window.talkify.config.ui.audioControls.enabled = true;
+      window.talkify.config.ui.audioControls.voicepicker.enabled = true;
+      window.talkify.config.ui.audioControls.container = document.getElementById("player-and-voices");
+
+      window.talkify.selectionActivator
+        .withTextHighlighting()
+        .activate();
+    }
+  }, []);
 
   const handleTranslate = async () => {
     setLoading(true);
@@ -29,10 +53,10 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
   const recognizeSignLanguage = async (imageName: string): Promise<string> => {
     try {
       let response = await translateImage(imageName);
+      response = response.trim().replace(/\s+\.$/, '.');
 
       const capitalized =
-      response.charAt(0).toUpperCase()
-    + response.slice(1)
+        response.charAt(0).toUpperCase() + response.slice(1);
 
       setOriginalText(capitalized);
       return response;
@@ -52,15 +76,22 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
     }
   };
 
-  const doGetVideo = async (videoName: string): Promise<string> => {
-    try {
-      const videoUrl = await getVideo(videoName);
-      return videoUrl;
-    } catch (error) {
-      console.error('Error getting video:', error);
-      throw error;
+  // const doGetVideo = async (videoName: string): Promise<string> => {
+  //   try {
+  //     const videoUrl = await getVideo(videoName);
+  //     return videoUrl;
+  //   } catch (error) {
+  //     console.error('Error getting video:', error);
+  //     throw error;
+  //   }
+  // };
+
+  const handleTextToSpeech = (sentence: string) => {
+    if (window.talkify) {
+      const player = new window.talkify.TtsPlayer();
+      player.playText(sentence);
     }
-  }
+  };
 
   return (
     <div className="mt-4">
@@ -97,10 +128,22 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
           <div>
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">German Text:</h3>
             <p className="mt-1 text-gray-600 dark:text-gray-400">{originalText}</p>
+            <button
+              onClick={() => handleTextToSpeech(originalText)}
+              className="px-4 py-2 mt-2 text-white bg-green-500 rounded"
+            >
+              Speak
+            </button>
           </div>
           <div className="mt-4">
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">English Text:</h3>
             <p className="mt-1 text-gray-600 dark:text-gray-400">{translation}</p>
+            <button
+              onClick={() => handleTextToSpeech(translation)}
+              className="px-4 py-2 mt-2 text-white bg-green-500 rounded"
+            >
+              Speak
+            </button>
           </div>
         </div>
       )}
