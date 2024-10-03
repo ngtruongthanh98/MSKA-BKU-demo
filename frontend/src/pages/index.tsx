@@ -1,11 +1,14 @@
 import React, { useState, useRef } from 'react';
 import DefaultLayout from '@/layouts/default';
 import VideoCard from '@/components/VideoCard';
+import { useTranslation } from 'react-i18next';
 
 const IndexPage: React.FC = () => {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [videoName, setVideoName] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { t } = useTranslation();
 
   const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -31,7 +34,7 @@ const IndexPage: React.FC = () => {
     <DefaultLayout>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
         <div className="justify-center inline-block max-w-lg text-center">
-          <h1 className="text-4xl font-bold">Upload Sign Language Video</h1>
+          <h1 className="text-4xl font-bold">{t('homepage.title')}</h1>
           <input
             type="file"
             accept="video/*"

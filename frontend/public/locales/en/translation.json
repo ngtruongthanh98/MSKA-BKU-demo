@@ -1,0 +1,14 @@
+{
+  "homepage": {
+    "title": "Upload Sign Language Video"
+  },
+  "button": {
+    "delete": "Delete Video",
+    "translate": "Translate Video",
+    "translating": "Translating..."
+  },
+  "germanText": "German Text",
+  "englishText": "English Text",
+  "vietnameseText": "Vietnamese Text",
+  "loading": "Loading..."
+}

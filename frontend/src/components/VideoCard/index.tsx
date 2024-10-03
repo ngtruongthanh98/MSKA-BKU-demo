@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { debounce } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 import {
   translateImage,
@@ -23,6 +24,8 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
   const [originalText, setOriginalText] = useState<string>('');
   const [translation, setTranslation] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Initialize Talkify
@@ -114,23 +117,23 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
           onClick={onDelete}
           className="px-4 py-2 text-white bg-red-500 rounded"
         >
-          Delete Video
+          {t('button.delete')}
         </button>
         <button
           onClick={handleTranslate}
           className="px-4 py-2 ml-2 text-white bg-blue-500 rounded"
           disabled={loading}
         >
-          {loading ? 'Translating...' : 'Translate Video'}
+          {loading ? t('button.translating') : t('button.translate')}
         </button>
       </div>
       {loading && (
-        <div className="mt-2 text-center text-blue-500">Loading...</div>
+        <div className="mt-2 text-center text-blue-500">{t('loading')}</div>
       )}
       {translation && (
         <div className="p-6 mt-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-800">
           <div>
-            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">German Text:</h3>
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">{t('germanText')}:</h3>
             <p className="mt-1 text-gray-600 dark:text-gray-400">
               {originalText}
               <span onClick={() => handleTextToSpeech(originalText)} className="ml-2 cursor-pointer">
@@ -139,7 +142,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
             </p>
           </div>
           <div className="mt-4">
-            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">English Text:</h3>
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">{t('englishText')}:</h3>
             <p className="mt-1 text-gray-600 dark:text-gray-400">
               {translation}
               <span onClick={() => handleTextToSpeech(translation)} className="ml-2 cursor-pointer">
