@@ -8,18 +8,18 @@ export const siteConfig = {
       label: "Home",
       href: "/",
     },
-    {
-      label: "Docs",
-      href: "/docs",
-    },
-    {
-      label: "Pricing",
-      href: "/pricing",
-    },
-    {
-      label: "Blog",
-      href: "/blog",
-    },
+    // {
+    //   label: "Docs",
+    //   href: "/docs",
+    // },
+    // {
+    //   label: "Pricing",
+    //   href: "/pricing",
+    // },
+    // {
+    //   label: "Blog",
+    //   href: "/blog",
+    // },
     {
       label: "About",
       href: "/about",
@@ -60,7 +60,7 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "https://github.com/nextui-org/nextui",
+    github: "https://github.com/ngtruongthanh98/MSKA-BKU-demo",
     twitter: "https://twitter.com/getnextui",
     docs: "https://nextui-docs-v2.vercel.app",
     discord: "https://discord.gg/9b6yyZKmH4",
