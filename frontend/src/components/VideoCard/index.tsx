@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { debounce } from 'lodash';
+
 import {
   translateImage,
   googleTranslate,
@@ -29,7 +31,6 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
       window.talkify.config.remoteService.apiKey = 'c889183e-dbeb-4012-9d6e-13a12eb291ae';
       window.talkify.config.ui.audioControls.enabled = true;
       window.talkify.config.ui.audioControls.voicepicker.enabled = true;
-      window.talkify.config.ui.audioControls.container = document.getElementById("player-and-voices");
 
       window.talkify.selectionActivator
         .withTextHighlighting()
@@ -86,12 +87,15 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
   //   }
   // };
 
-  const handleTextToSpeech = (sentence: string) => {
-    if (window.talkify) {
-      const player = new window.talkify.TtsPlayer();
-      player.playText(sentence);
-    }
-  };
+  const handleTextToSpeech = useCallback(
+    debounce((sentence: string) => {
+      if (window.talkify) {
+        const player = new window.talkify.TtsPlayer();
+        player.playText(sentence);
+      }
+    }, 300),
+    []
+  );
 
   return (
     <div className="mt-4">
@@ -127,23 +131,21 @@ const VideoCard: React.FC<VideoCardProps> = ({ videoSrc, videoName, onDelete }) 
         <div className="p-6 mt-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-800">
           <div>
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">German Text:</h3>
-            <p className="mt-1 text-gray-600 dark:text-gray-400">{originalText}</p>
-            <button
-              onClick={() => handleTextToSpeech(originalText)}
-              className="px-4 py-2 mt-2 text-white bg-green-500 rounded"
-            >
-              Speak
-            </button>
+            <p className="mt-1 text-gray-600 dark:text-gray-400">
+              {originalText}
+              <span onClick={() => handleTextToSpeech(originalText)} className="ml-2 cursor-pointer">
+                <i className="fas fa-volume-up"></i>
+              </span>
+            </p>
           </div>
           <div className="mt-4">
             <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">English Text:</h3>
-            <p className="mt-1 text-gray-600 dark:text-gray-400">{translation}</p>
-            <button
-              onClick={() => handleTextToSpeech(translation)}
-              className="px-4 py-2 mt-2 text-white bg-green-500 rounded"
-            >
-              Speak
-            </button>
+            <p className="mt-1 text-gray-600 dark:text-gray-400">
+              {translation}
+              <span onClick={() => handleTextToSpeech(translation)} className="ml-2 cursor-pointer">
+                <i className="fas fa-volume-up"></i>
+              </span>
+            </p>
           </div>
         </div>
       )}

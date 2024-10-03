@@ -24,7 +24,6 @@ This project uses the Talkify TTS API for text-to-speech functionality.
     </head>
     <body>
       <div id="root"></div>
-      <div id="player-and-voices"></div>
     </body>
     </html>
     ```
@@ -40,7 +39,6 @@ This project uses the Talkify TTS API for text-to-speech functionality.
           window.talkify.config.remoteService.apiKey = 'YOUR_API_KEY_HERE';
           window.talkify.config.ui.audioControls.enabled = true;
           window.talkify.config.ui.audioControls.voicepicker.enabled = true;
-          window.talkify.config.ui.audioControls.container = document.getElementById("player-and-voices");
 
           window.talkify.selectionActivator
             .withTextHighlighting()
