@@ -1,6 +1,7 @@
 import * as React from "react";
+import {Image} from "@nextui-org/react";
 
-import { IconSvgProps } from "@/types";
+import { IconSvgProps, ImageProps } from "@/types";
 
 export const Logo: React.FC<IconSvgProps> = ({
   size = 36,
@@ -212,3 +213,15 @@ export const NextUILogo: React.FC<IconSvgProps> = (props) => {
     </svg>
   );
 };
+
+
+export const BachKhoaLogo: React.FC<ImageProps> = ({ width, height }) => {
+  return (
+    <Image
+      width={width}
+      height={height}
+      alt="HCMUT Logo"
+      src="../../public/images/hcmut.png"
+    />
+  )
+}

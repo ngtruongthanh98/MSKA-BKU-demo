@@ -19,7 +19,7 @@ import {
   GithubIcon,
   SearchIcon,
 } from "@/components/icons";
-import { Logo } from "@/components/icons";
+import { Logo, BachKhoaLogo } from "@/components/icons";
 import LanguageToggle from './LanguageToggle'
 
 export const Navbar = () => {
@@ -53,8 +53,8 @@ export const Navbar = () => {
             color="foreground"
             href="/"
           >
-            <Logo />
-            <p className="font-bold text-inherit">ACME</p>
+            <BachKhoaLogo width="auto" height="48px" />
+            <p className="font-bold text-inherit">CSE-HCMUT</p>
           </Link>
         </NavbarBrand>
         <div className="justify-start hidden gap-4 ml-2 lg:flex">
