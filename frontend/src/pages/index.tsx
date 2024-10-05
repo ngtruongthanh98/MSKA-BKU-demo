@@ -76,7 +76,12 @@ const IndexPage: React.FC = () => {
           <FileUpload key={fileUploadKey} onFileUpload={handleVideoUpload} />
           {videoSrc && videoName && (
             <>
+              <div className="mt-2 text-center">
+                <p className="text-lg font-semibold">{videoName}</p>
+              </div>
+
               <div className="flex flex-row items-center justify-center mt-4 space-x-4">
+
                 <div className="flex space-x-4 button-container">
                   <button
                     onClick={handleTranslate}
@@ -97,7 +102,6 @@ const IndexPage: React.FC = () => {
 
               <VideoCard
                 videoSrc={videoSrc}
-                videoName={videoName}
                 onTranslate={handleTranslate}
                 loading={loading}
                 translation={translation}

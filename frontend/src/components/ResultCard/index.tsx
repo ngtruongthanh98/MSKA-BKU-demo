@@ -10,14 +10,13 @@ declare global {
 
 interface ResultCardProps {
   videoSrc: string;
-  videoName: string;
   onTranslate: () => void;
   loading: boolean;
   translation: string;
   originalText: string;
 }
 
-const ResultCard: React.FC<ResultCardProps> = ({ videoName, loading, translation, originalText }) => {
+const ResultCard: React.FC<ResultCardProps> = ({ loading, translation, originalText }) => {
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -46,9 +45,6 @@ const ResultCard: React.FC<ResultCardProps> = ({ videoName, loading, translation
 
   return (
     <div className="mt-4">
-      <div className="mt-2 text-center">
-        <p className="text-lg font-semibold">{videoName}</p>
-      </div>
       {loading && (
         <div className="mt-2 text-center text-blue-500">{t('loading')}</div>
       )}
