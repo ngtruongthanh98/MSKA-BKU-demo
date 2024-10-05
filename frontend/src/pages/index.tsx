@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import DefaultLayout from '@/layouts/default';
-import VideoCard from '@/components/ResultCard';
+import ResultCard from '@/components/ResultCard';
 import { useTranslation } from 'react-i18next';
 import { FileUpload } from '@/components/FileUpload';
 import { translateImage, googleTranslate } from '@/utils/api.ts';
@@ -100,7 +100,7 @@ const IndexPage: React.FC = () => {
                 </div>
               </div>
 
-              <VideoCard
+              <ResultCard
                 videoSrc={videoSrc}
                 onTranslate={handleTranslate}
                 loading={loading}
