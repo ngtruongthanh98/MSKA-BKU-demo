@@ -84,18 +84,18 @@ const IndexPage: React.FC = () => {
 
                 <div className="flex space-x-4 button-container">
                   <button
+                    onClick={handleReset}
+                    className="px-6 py-3 text-white transition duration-300 ease-in-out transform bg-red-600 rounded-lg shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 hover:scale-105"
+                  >
+                    {t('button.delete')}
+                  </button>
+
+                  <button
                     onClick={handleTranslate}
                     className="px-6 py-3 text-white transition duration-300 ease-in-out transform bg-blue-500 rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 hover:scale-105"
                     disabled={loading}
                   >
                     {loading ? t('button.translating') : t('button.translate')}
-                  </button>
-
-                  <button
-                    onClick={handleReset}
-                    className="px-6 py-3 text-white transition duration-300 ease-in-out transform bg-red-600 rounded-lg shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 hover:scale-105"
-                  >
-                    {t('button.delete')}
                   </button>
                 </div>
               </div>
