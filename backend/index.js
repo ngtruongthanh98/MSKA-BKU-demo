@@ -17,8 +17,21 @@ app.use('/api/google-translate', googleTranslateRoute);
 const getVideoRoute = require('./routes/getVideoRoute');
 app.use('/api/get-video', getVideoRoute);
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+const videoToFramesRoute = require('./routes/videoToFramesRoute');
+app.use('/api/video-to-frames', videoToFramesRoute);
+
+const flaskServerUrl = 'http://localhost:5000/receive-images';
+
+app.post('/api/send-images', async (req, res) => {
+  const { imageArray } = req.body;
+
+  try {
+    await axios.post(flaskServerUrl, { imageArray });
+    res.send('Images sent to Flask server');
+  } catch (error) {
+    console.error('Error sending images to Flask server:', error);
+    res.status(500).send('Error sending images to Flask server');
+  }
 });
 
 app.listen(port, () => {

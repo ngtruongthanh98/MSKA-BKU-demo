@@ -26,6 +26,10 @@ const IndexPage: React.FC = () => {
     try {
       const recognizedText = await recognizeSignLanguage(videoName!);
       const translatedText = await translateToSpokenLanguage(recognizedText);
+
+      // const videoFrames = await getVideoFrames(videoName!);
+      // console.log('videoFrames:', videoFrames);
+
       setTranslation(translatedText);
     } catch (error) {
       console.error('Error during translation process:', error);
