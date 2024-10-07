@@ -23,10 +23,10 @@ app.use('/api/video-to-frames', videoToFramesRoute);
 const flaskServerUrl = 'http://localhost:5000/receive-images';
 
 app.post('/api/send-images', async (req, res) => {
-  const { imageArray } = req.body;
+  const { imageArray, videoName } = req.body;
 
   try {
-    await axios.post(flaskServerUrl, { imageArray });
+    await axios.post(flaskServerUrl, { imageArray, videoName });
     res.send('Images sent to Flask server');
   } catch (error) {
     console.error('Error sending images to Flask server:', error);

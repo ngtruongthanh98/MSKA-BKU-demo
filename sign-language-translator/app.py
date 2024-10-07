@@ -14,9 +14,11 @@ def predict():
 def receive_images():
     data = request.get_json()
     image_array = data.get('imageArray', [])
+    video_name = data.get('videoName', '')
 
     # Process the imageArray as needed
     print('Received imageArray:', image_array)
+    print('Received videoName:', video_name)
 
     return jsonify({'message': 'Images received successfully'}), 200
 
