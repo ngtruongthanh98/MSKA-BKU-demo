@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-exports.translateImage = (req, res) => {
+exports.translateVideoToText = (req, res) => {
   const { imageName } = req.body;
   console.log(`Received imageName: ${imageName}`);
 

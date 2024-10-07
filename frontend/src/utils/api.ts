@@ -1,4 +1,4 @@
-export async function translateImage(imageName: string): Promise<string> {
+export async function translateVideoToText(imageName: string): Promise<string> {
   const response = await fetch('http://localhost:3000/api/sl-translate', {
     method: 'POST',
     headers: {
