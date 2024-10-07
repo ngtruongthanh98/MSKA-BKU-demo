@@ -4,8 +4,8 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-@app.route('/receive-images', methods=['POST'])
-def receive_images():
+@app.route('/mska-translator', methods=['POST'])
+def mska_translator():
     data = request.get_json()
     image_array = data.get('imageArray', [])
     video_name = data.get('videoName')
