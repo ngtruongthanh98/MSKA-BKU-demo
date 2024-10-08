@@ -10,5 +10,6 @@
   "germanText": "German Text",
   "englishText": "English Text",
   "vietnameseText": "Vietnamese Text",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "uploadOrDrag": "Click to upload or drag and drop"
 }

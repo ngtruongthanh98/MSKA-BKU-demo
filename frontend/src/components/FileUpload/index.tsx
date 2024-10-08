@@ -1,4 +1,5 @@
 "use client";
+import { t } from "i18next";
 import React, { useState } from "react";
 
 interface FileUploadProps {
@@ -53,7 +54,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload }) => {
             htmlFor="file"
             className="flex flex-col justify-center h-full text-center text-gray-700 dark:text-gray-300"
           >
-            Click to upload or drag and drop
+            {t('uploadOrDrag')}
           </label>
           <input
             id="file"
