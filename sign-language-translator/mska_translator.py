@@ -4,12 +4,13 @@ from flask import request, jsonify
 
 def mska_translator():
     data = request.get_json()
-    image_array = data.get('imageArray', [])
     video_name = data.get('videoName')
 
-    # Process the imageArray as needed
-    print('Received imageArray:', image_array)
+    # Debugging information
     print('Received videoName:', video_name)
+
+    if not video_name:
+        return jsonify({'error': 'videoName is required'}), 400
 
     # Construct the file path
     file_path = os.path.join(os.path.dirname(__file__), '../data/results.json')
@@ -28,6 +29,6 @@ def mska_translator():
     result = next((entry for entry in results if video_name in entry['name']), None)
 
     if result:
-        return jsonify({'txt_hyp': result['txt_hyp']})
+        return result['txt_hyp']
     else:
-        return jsonify({'error': 'Image name not found'}), 404
+        return jsonify({'error': 'Video name not found'}), 404
