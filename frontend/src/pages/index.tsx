@@ -96,8 +96,8 @@ const IndexPage: React.FC = () => {
 
                   <button
                     onClick={handleTranslate}
-                    className="px-6 py-3 text-white transition duration-300 ease-in-out transform bg-blue-500 rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 hover:scale-105"
-                    disabled={loading}
+                    className={`px-6 py-3 text-white transition duration-300 ease-in-out transform bg-blue-500 rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 hover:scale-105 ${loading || !!originalText ? 'cursor-not-allowed' : ''}`}
+                    disabled={loading || !!originalText}
                   >
                     {loading ? t('button.translating') : t('button.translate')}
                   </button>
