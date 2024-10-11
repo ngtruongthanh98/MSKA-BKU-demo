@@ -2,6 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { convertVideoToFrames } = require('../utils');
+const axios = require('axios');
 
 // Multer setup for file uploads
 const storage = multer.diskStorage({
@@ -39,7 +40,25 @@ const uploadVideo = (req, res) => {
 
   convertVideoToFrames(videoPath, videoName)
     .then((imageArray) => {
-      res.send({ filePath: req.file.path, frames: imageArray });
+      // res.send({ filePath: req.file.path, frames: imageArray });
+
+      //TODO: handle send frames to Flask server
+
+      try {
+        // call API to Flask Server port 5000, send videoName and get response
+        axios.post('http://localhost:5000/translate', { videoName })
+          .then(response => {
+            console.log('Response:', response.data);
+            res.send(response.data);
+          })
+          .catch(error => {
+            console.error('Error calling API:', error);
+            res.status(500).send('Error calling API');
+          });
+      } catch (parseError) {
+        console.error('Error parsing JSON:', parseError);
+        res.status(500).send('Error parsing JSON');
+      }
     })
     .catch((error) => {
       console.error('Error converting video to frames:', error);
