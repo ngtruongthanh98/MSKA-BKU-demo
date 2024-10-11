@@ -1,6 +1,28 @@
 const axios = require('axios');
+const path = require('path');
+const fs = require('fs');
+const ffmpeg = require('fluent-ffmpeg');
 
-async function videoToFrames(videoName) {
+const convertVideoToFrames = (videoPath, videoName) => {
+  return new Promise((resolve, reject) => {
+    const outputDir = path.join(__dirname, '..', 'frames', videoName);
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
+
+    ffmpeg(videoPath)
+      .on('end', () => {
+        const imageArray = fs.readdirSync(outputDir).map((file) => path.join(outputDir, file));
+        resolve(imageArray);
+      })
+      .on('error', (err) => {
+        reject(err);
+      })
+      .save(`${outputDir}/frame%04d.png`);
+  });
+};
+
+async function videoToFramesInternal(videoName) {
   const baseUrl = 'https://storage.googleapis.com/phoenix14tframebku/';
   const imageArray = [];
 
@@ -18,4 +40,4 @@ async function videoToFrames(videoName) {
   return imageArray;
 }
 
-module.exports = { videoToFrames };
+module.exports = { videoToFramesInternal, convertVideoToFrames };

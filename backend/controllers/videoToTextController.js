@@ -1,6 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { convertVideoToFrames } = require('../utils');
 
 // Multer setup for file uploads
 const storage = multer.diskStorage({
@@ -27,9 +28,23 @@ const uploadVideo = (req, res) => {
     return res.status(400).send('No file uploaded.');
   }
 
-  res.send({ filePath: req.file.path });
+
+  // res.send({ filePath: req.file.path, fileName: req.file.originalname });
 
   // res.send("Im süden hält sich der nebel zum teil länger an auf den bergen scheint die sonne auch für längere zeit.");
+
+
+  const videoPath = req.file.path;
+  const videoName = path.basename(videoPath, path.extname(videoPath));
+
+  convertVideoToFrames(videoPath, videoName)
+    .then((imageArray) => {
+      res.send({ filePath: req.file.path, frames: imageArray });
+    })
+    .catch((error) => {
+      console.error('Error converting video to frames:', error);
+      res.status(500).send('Error converting video to frames.');
+    });
 };
 
 module.exports = {
