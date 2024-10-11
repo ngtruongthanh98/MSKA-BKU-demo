@@ -66,3 +66,20 @@ export async function getVideoFrames(videoName: string): Promise<string> {
   const data = await response.json();
   return data.videoUrl;
 }
+
+export async function videoToText(videoFile: File): Promise<string> {
+  const formData = new FormData();
+  formData.append('file', videoFile);
+
+  const response = await fetch('http://localhost:3000/api/video-to-text', {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+
+  const data = await response.text();
+  return data;
+}

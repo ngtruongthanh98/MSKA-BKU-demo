@@ -26,7 +26,10 @@ const uploadVideo = (req, res) => {
   if (!req.file) {
     return res.status(400).send('No file uploaded.');
   }
+
   res.send({ filePath: req.file.path });
+
+  // res.send("Im süden hält sich der nebel zum teil länger an auf den bergen scheint die sonne auch für längere zeit.");
 };
 
 module.exports = {

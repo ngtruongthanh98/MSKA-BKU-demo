@@ -3,7 +3,7 @@ import DefaultLayout from '@/layouts/default';
 import ResultCard from '@/components/ResultCard';
 import { useTranslation } from 'react-i18next';
 import { FileUpload } from '@/components/FileUpload';
-import { translateVideoToText, googleTranslate } from '@/utils/api.ts';
+import { translateVideoToText, googleTranslate, videoToText } from '@/utils/api.ts';
 
 const IndexPage: React.FC = () => {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
@@ -13,12 +13,15 @@ const IndexPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [fileUploadKey, setFileUploadKey] = useState<number>(0);
 
+  const [file, setFile] = useState<File | null>(null);
+
   const { t } = useTranslation();
 
   const handleVideoUpload = (file: File) => {
     const videoURL = URL.createObjectURL(file);
     setVideoSrc(videoURL);
     setVideoName(file.name.replace('.mp4', ''));
+    setFile(file);
   };
 
   const handleTranslate = async () => {
@@ -26,6 +29,8 @@ const IndexPage: React.FC = () => {
     try {
       const recognizedText = await recognizeSignLanguage(videoName!);
       const translatedText = await translateToSpokenLanguage(recognizedText);
+
+      await videoToText(file!);
 
       // const videoFrames = await getVideoFrames(videoName!);
       // console.log('videoFrames:', videoFrames);
