@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const axios = require('axios');
+
 const app = express();
 const port = 3000;
 
@@ -7,7 +9,9 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
-// Routes
+const videoToTextRoute = require('./routes/videoToTextRoute');
+app.use('/api', videoToTextRoute);
+
 const translateRoute = require('./routes/signLanguageTranslateRoute');
 app.use('/api/sl-translate', translateRoute);
 
