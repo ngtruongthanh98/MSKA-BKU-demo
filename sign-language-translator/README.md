@@ -5,7 +5,7 @@
 To install the necessary dependencies, run the following command:
 
 ```bash
-pip install flask
+pip install -r requirements.txt
 ```
 
 ## Setting Up a Virtual Environment
