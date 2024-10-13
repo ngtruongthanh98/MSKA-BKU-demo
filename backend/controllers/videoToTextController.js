@@ -34,10 +34,6 @@ const uploadVideo = (req, res) => {
 
   convertVideoToFrames(videoPath, videoName)
     .then((imageArray) => {
-      // res.send({ filePath: req.file.path, frames: imageArray });
-
-      //TODO: handle send frames to Flask server
-
       try {
         axios.post('http://localhost:5000/translate-sign-video', { videoName, imageArray })
           .then(response => {
