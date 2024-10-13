@@ -29,12 +29,6 @@ const uploadVideo = (req, res) => {
     return res.status(400).send('No file uploaded.');
   }
 
-
-  // res.send({ filePath: req.file.path, fileName: req.file.originalname });
-
-  // res.send("Im süden hält sich der nebel zum teil länger an auf den bergen scheint die sonne auch für längere zeit.");
-
-
   const videoPath = req.file.path;
   const videoName = path.basename(videoPath, path.extname(videoPath));
 
@@ -45,8 +39,7 @@ const uploadVideo = (req, res) => {
       //TODO: handle send frames to Flask server
 
       try {
-        // call API to Flask Server port 5000, send videoName and get response
-        axios.post('http://localhost:5000/translate', { videoName })
+        axios.post('http://localhost:5000/translate-sign-video', { videoName, imageArray })
           .then(response => {
             console.log('Response:', response.data);
             res.send(response.data);

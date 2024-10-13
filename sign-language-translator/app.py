@@ -3,7 +3,7 @@ from mska_translator import mska_translator
 
 app = Flask(__name__)
 
-@app.route('/translate', methods=['POST'])
+@app.route('/translate-sign-video', methods=['POST'])
 def translate_route():
     return mska_translator()
 

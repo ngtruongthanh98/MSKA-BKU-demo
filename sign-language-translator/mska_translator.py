@@ -6,8 +6,10 @@ def mska_translator():
     data = request.get_json()
     video_name = data.get('videoName')
 
-    # Debugging information
     print('Received videoName:', video_name)
+
+    image_array = data.get('imageArray')
+    print('Received imageArray:', image_array)
 
     if not video_name:
         return jsonify({'error': 'videoName is required'}), 400
@@ -32,3 +34,6 @@ def mska_translator():
         return result['txt_hyp']
     else:
         return jsonify({'error': 'Video name not found'}), 404
+
+
+    # return 'Im süden hält sich der nebel zum teil länger an auf den bergen scheint die sonne auch für längere zeit.'

@@ -20,7 +20,7 @@ exports.translateVideoToText = (req, res) => {
 
     try {
       // call API to Flask Server port 5000, send videoName and get response
-      axios.post('http://localhost:5000/translate', { videoName })
+      axios.post('http://localhost:5000/translate-sign-video', { videoName })
         .then(response => {
           console.log('Response:', response.data);
           res.send(response.data);
