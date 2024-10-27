@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const { convertVideoToFrames } = require('../utils');
 const axios = require('axios');
+require('dotenv').config();
 
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -35,7 +36,7 @@ const uploadVideo = (req, res) => {
   convertVideoToFrames(videoPath, videoName)
     .then((imageArray) => {
       try {
-        axios.post('http://localhost:5000/translate-sign-video', { videoName, imageArray })
+        axios.post(`${process.env.MSKA_SERVER_PATH}/translate-sign-video`, { videoName, imageArray })
           .then(response => {
             console.log('Response:', response.data);
             res.send(response.data);

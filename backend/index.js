@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+require('dotenv').config();
 
 const app = express();
 const port = 3000;
@@ -24,7 +25,7 @@ app.use('/api/get-video', getVideoRoute);
 const videoToFramesRoute = require('./routes/videoToFramesRoute');
 app.use('/api/video-to-frames', videoToFramesRoute);
 
-const flaskServerUrl = 'http://localhost:5000/receive-images';
+const flaskServerUrl = `${process.env.MSKA_SERVER_PATH}/receive-images`;
 
 app.post('/api/send-images', async (req, res) => {
   const { imageArray, videoName } = req.body;

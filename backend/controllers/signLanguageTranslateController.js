@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
+require('dotenv').config();
 
 exports.translateVideoToText = (req, res) => {
   const { videoName } = req.body;
@@ -20,7 +21,7 @@ exports.translateVideoToText = (req, res) => {
 
     try {
       // call API to Flask Server port 5000, send videoName and get response
-      axios.post('http://localhost:5000/translate-sign-video', { videoName })
+      axios.post(`${process.env.MSKA_SERVER_PATH}/translate-sign-video`, { videoName })
         .then(response => {
           console.log('Response:', response.data);
           res.send(response.data);
