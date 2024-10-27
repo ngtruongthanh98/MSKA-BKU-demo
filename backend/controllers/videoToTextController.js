@@ -36,7 +36,7 @@ const uploadVideo = (req, res) => {
   convertVideoToFrames(videoPath, videoName)
     .then((imageArray) => {
       try {
-        axios.post(`${process.env.MSKA_SERVER_PATH}/translate-sign-video`, { videoName, imageArray })
+        axios.post(`${process.env.MSKA_SERVER_PATH}translate-sign-video`, { videoName, imageArray })
           .then(response => {
             console.log('Response:', response.data);
             res.send(response.data);

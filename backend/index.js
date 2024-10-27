@@ -25,7 +25,7 @@ app.use('/api/get-video', getVideoRoute);
 const videoToFramesRoute = require('./routes/videoToFramesRoute');
 app.use('/api/video-to-frames', videoToFramesRoute);
 
-const flaskServerUrl = `${process.env.MSKA_SERVER_PATH}/receive-images`;
+const flaskServerUrl = `${process.env.MSKA_SERVER_PATH}receive-images`;
 
 app.post('/api/send-images', async (req, res) => {
   const { imageArray, videoName } = req.body;
