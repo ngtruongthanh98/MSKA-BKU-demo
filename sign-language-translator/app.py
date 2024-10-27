@@ -23,4 +23,4 @@ if __name__ == '__main__':
     app.config["BASE_URL"] = public_url
 
     # Start the Flask server in a new thread
-    threading.Thread(target=app.run, kwargs={"use_reloader": False, "host": '0.0.0.0', "port": 5000}).start()
+    threading.Thread(target=app.run, kwargs={"use_reloader": False, "host": '0.0.0.0', "port": 5000, "debug": True}).start()
