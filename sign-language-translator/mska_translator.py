@@ -31,6 +31,9 @@ def mska_translator():
 
     try:
         result = get_training_result(file_path, config_path, resume_path, input_keypoints_path)
+
+        print('result: ', result)
+
     except Exception as e:
         print('Error occurred:', e)
         return jsonify({'error': 'Error occurred'}), 500
