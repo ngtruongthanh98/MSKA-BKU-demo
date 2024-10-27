@@ -9,6 +9,8 @@ def get_training_result(file_path, config_path, resume_path, input_keypoints_pat
         '--eval'
     ]
 
+    print('file_path: ', file_path)
+
     try:
         result = subprocess.run(command, capture_output=True, text=True, check=True)
 
