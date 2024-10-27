@@ -51,7 +51,7 @@ def get_args_parser():
     parser.add_argument('--device', default='cuda',
                         help='device to use for training / testing')
     parser.add_argument('--seed', default=0, type=int)
-    parser.add_argument('--resume', default='', help='resume from checkpoint')
+    parser.add_argument('--resume', default='pretrained_models/Phoenix-2014T_SLT/best.pth', help='resume from checkpoint')
     parser.add_argument('--start_epoch', default=0, type=int, metavar='N',
                         help='start epoch')
     parser.add_argument('--eval', action='store_true', help='Perform evaluation only')
@@ -61,7 +61,7 @@ def get_args_parser():
     parser.add_argument('--no-pin-mem', action='store_false', dest='pin_mem',
                         help='')
     parser.set_defaults(pin_mem=True)
-    parser.add_argument('--config', type=str, default='configs/csl-daily_s2g.yaml')
+    parser.add_argument('--config', type=str, default='configs/phoenix-2014t_s2t.yaml')
 
     # * wandb params
     parser.add_argument("--log_all", action="store_true",
@@ -539,9 +539,6 @@ def evaluate_one_item(args, config, src_input, model, tokenizer, epoch, beam_siz
                     results[name]['gls_ref'] = gls_ref.upper() if tokenizer.lower_case \
                         else gls_ref
 
-        result_dir = f'../result-one-item'
-        os.makedirs(result_dir, exist_ok=True)
-
         if do_translation:
             last_result = []
 
@@ -596,11 +593,6 @@ def evaluate_one_item(args, config, src_input, model, tokenizer, epoch, beam_siz
 
             print('last_result: ', last_result)
 
-            # os.makedirs('../result/json', exist_ok=True)
-
-            # # Store data to json file
-            # with open('../result/json/predicted_result.json', 'w') as f:
-            #     json.dump(last_result, f, indent=4)
 
         metric_logger.update(loss=output['total_loss'].item())
 

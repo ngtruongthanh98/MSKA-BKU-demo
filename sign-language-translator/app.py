@@ -11,7 +11,6 @@ def translate_route():
     return mska_translator()
 
 if __name__ == '__main__':
-    # Prompt for ngrok auth token
     # auth_token = getpass.getpass("Enter your ngrok authtoken, which can be copied from https://dashboard.ngrok.com/get-started/your-authtoken: ")
     auth_token = '2PtzIXwPLLVl1tSapKtcCyEiOGI_35HYt93wuTTwUbyiTEA3m'
     conf.get_default().auth_token = auth_token
