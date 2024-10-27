@@ -8,6 +8,7 @@ def mska_translator():
     video_name = data.get('videoName')
     image_array = data.get('imageArray')
 
+    file_path = '../../baseline-MSKA/train.py'
     config_path = '../../baseline-MSKA/configs/phoenix-2014t_s2t.yaml'
     resume_path = '../../../baseline-MSKA/pretrained_models/Phoenix-2014T_SLT/best.pth'
     input_keypoints_path = os.path.join('../../../baseline-MSKA/HRNet-keypoints', video_name, 'src_input.pkl')

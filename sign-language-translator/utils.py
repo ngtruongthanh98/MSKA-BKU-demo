@@ -1,8 +1,8 @@
 import subprocess
 
-def get_training_result(config_path, resume_path, input_keypoints_path):
+def get_training_result(file_path, config_path, resume_path, input_keypoints_path):
     command = [
-        'python', 'train.py',
+        'python', file_path,
         '--config', config_path,
         '--resume', resume_path,
         '--input_keypoints_path', input_keypoints_path,
