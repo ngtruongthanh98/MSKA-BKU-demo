@@ -35,7 +35,7 @@ def mska_translator():
         print('Error occurred:', e)
         return jsonify({'error': 'Error occurred'}), 500
 
-    result = next((entry for entry in results if video_name in entry['name']), None)
+    # result = next((entry for entry in results if video_name in entry['name']), None)
 
     if result:
         return result['txt_hyp']
