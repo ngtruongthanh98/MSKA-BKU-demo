@@ -20,6 +20,7 @@ from typing import Iterable
 from loguru import logger
 import gc
 import re
+import pickle
 
 # *metric
 from metrics import wer_list, bleu, rouge
@@ -72,6 +73,9 @@ def get_args_parser():
     parser.add_argument("--project", type=str, default='VLP',
                         help="wandb project",
                         )
+    parser.add_argument("--input_keypoints_path", default='',
+                        help="path to the input keypoints file",
+                        )
 
     return parser
 
@@ -123,6 +127,16 @@ def main(args, config):
                                  collate_fn=test_data.collate_fn,
                                  pin_memory=args.pin_mem)
 
+    # file_path = '../17February_2011_Thursday_heute-387/src_input.pkl'
+    src_input = load_keypoints_data(args.input_keypoints_path)
+
+    if src_input is not None:
+        # Process the keypoints_data
+        print('Keypoints data loaded successfully.')
+    else:
+        print('Failed to load keypoints data.')
+
+
     print(f"Creating model:")
     model = SignLanguageModel(cfg=config, args=args)
     model.to(device)
@@ -150,15 +164,21 @@ def main(args, config):
     if args.eval:
         if not args.resume:
             logger.warning('Please specify the trained model: --resume /path/to/best_checkpoint.pth')
-        dev_stats = evaluate(args, config, dev_dataloader, model, tokenizer, epoch=0, beam_size=5,
-                              generate_cfg=config['training']['validation']['translation'],
-                              do_translation=config['do_translation'], do_recognition=config['do_recognition'])
-        print(f"Dev loss of the network on the {len(dev_dataloader)} test videos: {dev_stats['loss']:.3f}")
+        # dev_stats = evaluate(args, config, dev_dataloader, model, tokenizer, epoch=0, beam_size=5,
+        #                       generate_cfg=config['training']['validation']['translation'],
+        #                       do_translation=config['do_translation'], do_recognition=config['do_recognition'])
+        # print(f"Dev loss of the network on the {len(dev_dataloader)} test videos: {dev_stats['loss']:.3f}")
 
-        test_stats = evaluate(args, config, test_dataloader, model, tokenizer, epoch=0, beam_size=5,
+        # test_stats = evaluate(args, config, test_dataloader, model, tokenizer, epoch=0, beam_size=5,
+        #                       generate_cfg=config['testing']['translation'],
+        #                       do_translation=config['do_translation'], do_recognition=config['do_recognition'])
+        # print(f"Test loss of the network on the {len(test_dataloader)} test videos: {test_stats['loss']:.3f}")
+
+
+        custom_starts = evaluate_one_item(args, config, src_input, model, tokenizer, epoch=0, beam_size=5,
                               generate_cfg=config['testing']['translation'],
                               do_translation=config['do_translation'], do_recognition=config['do_recognition'])
-        print(f"Test loss of the network on the {len(test_dataloader)} test videos: {test_stats['loss']:.3f}")
+
         return
 
     print(f"Start training for {args.epochs} epochs")
@@ -180,6 +200,7 @@ def main(args, config):
                               beam_size=config['training']['validation']['recognition']['beam_size'],
                               generate_cfg=config['training']['validation']['translation'],
                               do_translation=config['do_translation'], do_recognition=config['do_recognition'])
+
         if config['task'] == "S2T":
             if bleu_4 < test_stats["bleu4"]:
                 bleu_4 = test_stats["bleu4"]
@@ -223,14 +244,21 @@ def main(args, config):
     if test_on_last_epoch:
         checkpoint = torch.load(str(output_dir) + '/best_checkpoint.pth', map_location='cpu')
         model.load_state_dict(checkpoint['model'], strict=True)
-        dev_stats = evaluate(args, config, dev_dataloader, model, tokenizer, epoch=0, beam_size=config['testing']['recognition']['beam_size'],
-                             generate_cfg=config['training']['validation']['translation'],
-                             do_translation=config['do_translation'], do_recognition=config['do_recognition'])
-        print(f"Dev loss of the network on the {len(dev_dataloader)} test videos: {dev_stats['loss']:.3f}")
-        test_stats = evaluate(args, config, test_dataloader, model, tokenizer, epoch=0, beam_size=config['testing']['recognition']['beam_size'],
+        # dev_stats = evaluate(args, config, dev_dataloader, model, tokenizer, epoch=0, beam_size=config['testing']['recognition']['beam_size'],
+        #                      generate_cfg=config['training']['validation']['translation'],
+        #                      do_translation=config['do_translation'], do_recognition=config['do_recognition'])
+        # print(f"Dev loss of the network on the {len(dev_dataloader)} test videos: {dev_stats['loss']:.3f}")
+
+        # test_stats = evaluate(args, config, test_dataloader, model, tokenizer, epoch=0, beam_size=config['testing']['recognition']['beam_size'],
+        #                       generate_cfg=config['testing']['translation'],
+        #                       do_translation=config['do_translation'], do_recognition=config['do_recognition'])
+        # print(f"Test loss of the network on the {len(test_dataloader)} test videos: {test_stats['loss']:.3f}")
+
+        custom_starts = evaluate_one_item(args, config, src_input, model, tokenizer, epoch=0, beam_size=config['testing']['recognition']['beam_size'],
                               generate_cfg=config['testing']['translation'],
                               do_translation=config['do_translation'], do_recognition=config['do_recognition'])
-        print(f"Test loss of the network on the {len(test_dataloader)} test videos: {test_stats['loss']:.3f}")
+        print(f"Test loss of the network on the {len(test_dataloader)} custom videos: {custom_starts['loss']:.3f}")
+
         if config['do_recognition']:
             with (output_dir / "log.txt").open("a") as f:
                 f.write(json.dumps({'Dev WER:': dev_stats['wer'],
@@ -242,6 +270,47 @@ def main(args, config):
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
     print('Training time {}'.format(total_time_str))
+
+# def load_keypoints_data(file_path):
+#     if not os.path.exists(file_path):
+#         print(f'File not found: {file_path}')
+#         return None
+
+#     try:
+#         # Try to load as a PyTorch file
+#         keypoints_data = torch.load(file_path)
+#     except (torch.serialization.pickle.UnpicklingError, AttributeError, EOFError):
+#         try:
+#             # Try to load as a JSON file
+#             with open(file_path, 'r') as f:
+#                 keypoints_data = json.load(f)
+#         except json.JSONDecodeError:
+#             try:
+#                 # Try to load as a plain text file
+#                 with open(file_path, 'r') as f:
+#                     keypoints_data = f.read()
+#             except Exception as e:
+#                 print(f'Error loading file: {e}')
+#                 return None
+
+#     return keypoints_data
+
+
+def load_keypoints_data(file_path):
+    if not os.path.exists(file_path):
+        print(f'File not found: {file_path}')
+        return None
+
+    try:
+        # Try to load as a pickle file
+        with open(file_path, 'rb') as f:
+            keypoints_data = pickle.load(f)
+    except Exception as e:
+        print(f'Error loading pickle file: {e}')
+        return None
+
+    return keypoints_data
+
 
 
 def train_one_epoch(args, model: torch.nn.Module, criterion,
@@ -282,6 +351,8 @@ def evaluate(args, config, dev_dataloader, model, tokenizer, epoch, beam_size=1,
 
     with torch.no_grad():
         for step, (src_input) in enumerate(metric_logger.log_every(dev_dataloader, print_freq, header)):
+            print('test src_input: ', src_input)
+
             output = model(src_input)
             if do_recognition:
                 for k, gls_logits in output.items():
@@ -337,6 +408,16 @@ def evaluate(args, config, dev_dataloader, model, tokenizer, epoch, beam_size=1,
                     ref_path = os.path.join(sample_dir, f'txt_ref_{temp_name}.mp3')
                     tts_ref = gTTS(text=txt_ref, lang='de')
                     tts_ref.save(ref_path)
+
+                    # save src_input as a pickle file
+                    src_input_path = os.path.join(sample_dir, 'src_input.pkl')
+                    try:
+                        with open(src_input_path, 'wb') as src_input_file:
+                            pickle.dump(src_input, src_input_file)
+                        print(f'Successfully saved src_input to {src_input_path}')
+                    except Exception as e:
+                        print(f'Error saving src_input to {src_input_path}: {e}')
+
 
                     # Create a text file to store txt_hyp and txt_ref
                     text_file_path = os.path.join(sample_dir, f'{temp_name}.txt')
@@ -419,6 +500,147 @@ def evaluate(args, config, dev_dataloader, model, tokenizer, epoch, beam_size=1,
             metric_logger.update(bleu4=bleu_dict['bleu4'])
             metric_logger.update(rouge=rouge_score)
 
+
+    if args.run:
+        args.run.log(
+            {'epoch': epoch + 1, 'epoch/dev_loss': output['recognition_loss'].item(), 'wer': evaluation_results['wer']})
+    print("* Averaged stats:", metric_logger)
+    print('* DEV loss {losses.global_avg:.3f}'.format(losses=metric_logger.loss))
+
+    return {k: meter.global_avg for k, meter in metric_logger.meters.items()}
+
+def evaluate_one_item(args, config, src_input, model, tokenizer, epoch, beam_size=1, generate_cfg={}, do_translation=True, do_recognition=True):
+    model.eval()
+    metric_logger = utils.MetricLogger(delimiter="  ")
+    header = 'Test:'
+    print_freq = 10
+    results = defaultdict(dict)
+
+    video_name = os.path.basename(os.path.dirname(args.input_keypoints_path))
+
+    print('video_name: ', video_name)
+
+    with torch.no_grad():
+        output = model(src_input)
+
+        if do_recognition:
+            for k, gls_logits in output.items():
+                if not 'gloss_logits' in k:
+                    continue
+                logits_name = k.replace('gloss_logits', '')
+                ctc_decode_output = model.recognition_network.decode(gloss_logits=gls_logits,
+                                                                    beam_size=beam_size,
+                                                                    input_lengths=output['input_lengths'])
+                batch_pred_gls = tokenizer.convert_ids_to_tokens(ctc_decode_output)
+                for name, gls_hyp, gls_ref in zip(src_input['name'], batch_pred_gls, src_input['gloss']):
+                    results[name][f'{logits_name}gls_hyp'] = \
+                        ' '.join(gls_hyp).upper() if tokenizer.lower_case \
+                            else ' '.join(gls_hyp)
+                    results[name]['gls_ref'] = gls_ref.upper() if tokenizer.lower_case \
+                        else gls_ref
+
+        result_dir = f'../result-one-item'
+        os.makedirs(result_dir, exist_ok=True)
+
+        if do_translation:
+            last_result = []
+
+            generate_output = model.generate_txt(
+                transformer_inputs=output['transformer_inputs'],
+                generate_cfg=generate_cfg)
+
+            for idx, (name, txt_hyp, txt_ref) in enumerate(zip(src_input['name'], generate_output['decoded_sequences'], src_input['text']), start=1):
+                print('name: ', name)
+                results[name]['txt_hyp'], results[name]['txt_ref'] = txt_hyp, txt_ref
+
+                match = re.match(r'^(test|dev)/(.+)$', name)
+                if match:
+                    prefix, rest_of_name = match.groups()
+                    temp_name = rest_of_name.replace("/", "-")
+                    sub_dir = os.path.join(result_dir, prefix)
+                else:
+                    temp_name = name.replace("/", "-")
+                    sub_dir = result_dir
+
+
+                print(
+                    f'Name: {name}' + '\n' +
+                    f'txt_hyp: {txt_hyp}' + '\n' +
+                    f'txt_ref: {txt_ref}' + '\n' +
+                    f'type: {prefix}'
+                )
+
+
+                # If name matches video_name, return the result immediately
+                if video_name in name:
+                    last_result.append(
+                        {
+                            'name': name,
+                            'txt_hyp': txt_hyp,
+                            'txt_ref': txt_ref,
+                            'prefix': prefix,
+                        }
+                    )
+
+                    os.makedirs('../result', exist_ok=True)
+
+
+                    with open('../result/predicted_result.json', 'w') as f:
+                        json.dump(last_result, f, indent=4)
+                    return {
+                        'name': name,
+                        'txt_hyp': txt_hyp,
+                        'txt_ref': txt_ref,
+                        'prefix': prefix,
+                    }
+
+            print('last_result: ', last_result)
+
+            # os.makedirs('../result/json', exist_ok=True)
+
+            # # Store data to json file
+            # with open('../result/json/predicted_result.json', 'w') as f:
+            #     json.dump(last_result, f, indent=4)
+
+        metric_logger.update(loss=output['total_loss'].item())
+
+        if do_recognition:
+            evaluation_results = {}
+            evaluation_results['wer'] = 200
+            for hyp_name in results[name].keys():
+                if not 'gls_hyp' in hyp_name:
+                    continue
+                k = hyp_name.replace('gls_hyp', '')
+                if config['data']['dataset_name'].lower() == 'phoenix-2014t':
+                    gls_ref = [clean_phoenix_2014_trans(results[n]['gls_ref']) for n in results]
+                    gls_hyp = [clean_phoenix_2014_trans(results[n][hyp_name]) for n in results]
+                elif config['data']['dataset_name'].lower() == 'phoenix-2014':
+                    gls_ref = [clean_phoenix_2014(results[n]['gls_ref']) for n in results]
+                    gls_hyp = [clean_phoenix_2014(results[n][hyp_name]) for n in results]
+                elif config['data']['dataset_name'].lower() == 'csl-daily':
+                    gls_ref = [results[n]['gls_ref'] for n in results]
+                    gls_hyp = [results[n][hyp_name] for n in results]
+                wer_results = wer_list(hypotheses=gls_hyp, references=gls_ref)
+                evaluation_results[k + 'wer_list'] = wer_results
+                evaluation_results['wer'] = min(wer_results['wer'], evaluation_results['wer'])
+            metric_logger.update(wer=evaluation_results['wer'])
+
+        if do_translation:
+            txt_ref = [results[n]['txt_ref'] for n in results]
+            txt_hyp = [results[n]['txt_hyp'] for n in results]
+            bleu_dict = bleu(references=txt_ref, hypotheses=txt_hyp, level=config['data']['level'])
+            rouge_score = rouge(references=txt_ref, hypotheses=txt_hyp, level=config['data']['level'])
+            for k, v in bleu_dict.items():
+                print('{} {:.2f}'.format(k, v))
+            print('ROUGE: {:.2f}'.format(rouge_score))
+            evaluation_results['rouge'], evaluation_results['bleu'] = rouge_score, bleu_dict
+            wandb.log({'eval/BLEU4': bleu_dict['bleu4']})
+            wandb.log({'eval/ROUGE': rouge_score})
+            metric_logger.update(bleu1=bleu_dict['bleu1'])
+            metric_logger.update(bleu2=bleu_dict['bleu2'])
+            metric_logger.update(bleu3=bleu_dict['bleu3'])
+            metric_logger.update(bleu4=bleu_dict['bleu4'])
+            metric_logger.update(rouge=rouge_score)
 
     if args.run:
         args.run.log(
