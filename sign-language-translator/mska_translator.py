@@ -1,7 +1,7 @@
 import os
 import json
 from flask import request, jsonify
-from utils import get_training_result
+from utils import get_training_result, hello_world
 
 def mska_translator():
     data = request.get_json()
@@ -19,26 +19,27 @@ def mska_translator():
     # Construct the file path
     file_path = os.path.join(os.path.dirname(__file__), '../data/results.json')
 
-    # try:
-    #     with open(file_path, 'r', encoding='utf-8') as file:
-    #         results = json.load(file)
-    # except IOError as e:
-    #     print('Error reading file:', e)
-    #     return jsonify({'error': 'Error reading file'}), 500
-    # except json.JSONDecodeError as e:
-    #     print('Error parsing JSON:', e)
-    #     return jsonify({'error': 'Error parsing JSON'}), 500
-
     try:
-        result = get_training_result(file_path, config_path, resume_path, input_keypoints_path)
+        with open(file_path, 'r', encoding='utf-8') as file:
+            results = json.load(file)
+            hello_world()
+    except IOError as e:
+        print('Error reading file:', e)
+        return jsonify({'error': 'Error reading file'}), 500
+    except json.JSONDecodeError as e:
+        print('Error parsing JSON:', e)
+        return jsonify({'error': 'Error parsing JSON'}), 500
 
-        print('result: ', result)
+    # try:
+    #     result = get_training_result(file_path, config_path, resume_path, input_keypoints_path)
+
+    #     print('result: ', result)
 
     except Exception as e:
         print('Error occurred:', e)
         return jsonify({'error': 'Error occurred'}), 500
 
-    # result = next((entry for entry in results if video_name in entry['name']), None)
+    result = next((entry for entry in results if video_name in entry['name']), None)
 
     if result:
         return result['txt_hyp']

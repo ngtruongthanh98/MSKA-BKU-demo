@@ -20,3 +20,6 @@ def get_training_result(file_path, config_path, resume_path, input_keypoints_pat
     except subprocess.CalledProcessError as e:
         print(f"Error occurred: {e.stderr}")
         return None
+
+def hello_world():
+    return 'Hello, World!'
