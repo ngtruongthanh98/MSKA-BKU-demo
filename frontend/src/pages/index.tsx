@@ -3,7 +3,7 @@ import DefaultLayout from '@/layouts/default';
 import ResultCard from '@/components/ResultCard';
 import { useTranslation } from 'react-i18next';
 import { FileUpload } from '@/components/FileUpload';
-import { translateVideoToText, googleTranslate, videoToText } from '@/utils/api.ts';
+import { videoToText, googleTranslate } from '@/utils/api.ts';
 
 const IndexPage: React.FC = () => {
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
@@ -27,13 +27,8 @@ const IndexPage: React.FC = () => {
   const handleTranslate = async () => {
     setLoading(true);
     try {
-      const recognizedText = await recognizeSignLanguage(videoName!);
+      const recognizedText = await recognizeSignLanguage(file!);
       const translatedText = await translateToSpokenLanguage(recognizedText);
-
-      await videoToText(file!);
-
-      // const videoFrames = await getVideoFrames(videoName!);
-      // console.log('videoFrames:', videoFrames);
 
       setTranslation(translatedText);
     } catch (error) {
@@ -43,9 +38,9 @@ const IndexPage: React.FC = () => {
     }
   };
 
-  const recognizeSignLanguage = async (videoName: string): Promise<string> => {
+  const recognizeSignLanguage = async (file: File): Promise<string> => {
     try {
-      let response = await translateVideoToText(videoName);
+      let response = await videoToText(file!)
       response = response.trim().replace(/\s+\.$/, '.');
 
       const capitalized =
