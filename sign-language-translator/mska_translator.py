@@ -10,8 +10,8 @@ def mska_translator():
 
     file_path = '../../baseline-MSKA/train.py'
     config_path = '../../baseline-MSKA/configs/phoenix-2014t_s2t.yaml'
-    resume_path = '../../../baseline-MSKA/pretrained_models/Phoenix-2014T_SLT/best.pth'
-    input_keypoints_path = os.path.join('../../../baseline-MSKA/HRNet-keypoints', video_name, 'src_input.pkl')
+    resume_path = '../../pretrained_models/Phoenix-2014T_SLT/best.pth'
+    input_keypoints_path = os.path.join('../../HRNet-keypoints', video_name, 'src_input.pkl')
 
     if not video_name:
         return jsonify({'error': 'videoName is required'}), 400
