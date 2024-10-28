@@ -35,16 +35,18 @@ def mska_translator():
 
         print('result: ', result)
 
+        return result['txt_hyp']
+
     except Exception as e:
         print('Error occurred:', e)
         return jsonify({'error': 'Error occurred'}), 500
 
     # result = next((entry for entry in results if video_name in entry['name']), None)
 
-    if result:
-        return result['txt_hyp']
-    else:
-        return jsonify({'error': 'Video name not found'}), 404
+    # if result:
+    #     return result['txt_hyp']
+    # else:
+    #     return jsonify({'error': 'Video name not found'}), 404
 
 
     # return 'Im süden hält sich der nebel zum teil länger an auf den bergen scheint die sonne auch für längere zeit.'
