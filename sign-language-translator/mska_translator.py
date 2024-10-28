@@ -31,20 +31,20 @@ def mska_translator():
     #     return jsonify({'error': 'Error parsing JSON'}), 500
 
     try:
-        result = get_training_result(file_path, config_path, resume_path, input_keypoints_path)
+        results = get_training_result(file_path, config_path, resume_path, input_keypoints_path)
 
-        return result['txt_hyp']
+        result = next((entry for entry in results if video_name in entry['name']), None)
+
+        if result:
+            return result['txt_hyp']
+        else:
+            return jsonify({'error': 'Video name not found'}), 404
 
     except Exception as e:
         print('Error occurred:', e)
         return jsonify({'error': 'Error occurred'}), 500
 
-    # result = next((entry for entry in results if video_name in entry['name']), None)
 
-    # if result:
-    #     return result['txt_hyp']
-    # else:
-    #     return jsonify({'error': 'Video name not found'}), 404
 
 
     # return 'Im süden hält sich der nebel zum teil länger an auf den bergen scheint die sonne auch für längere zeit.'
