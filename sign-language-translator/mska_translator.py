@@ -33,8 +33,6 @@ def mska_translator():
     try:
         result = get_training_result(file_path, config_path, resume_path, input_keypoints_path)
 
-        print('result: ', result_json)
-
         return result['txt_hyp']
 
     except Exception as e:
