@@ -1,4 +1,4 @@
-# Sign Language Translater
+# Sign Language Translator
 
 ## Introduction
 This project uses the Talkify TTS API for text-to-speech functionality.
