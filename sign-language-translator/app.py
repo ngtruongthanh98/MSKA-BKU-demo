@@ -1,10 +1,12 @@
 import getpass
 import threading
 from flask import Flask
+from flask_cors import CORS
 from pyngrok import ngrok, conf
 from mska_translator import mska_translator
 
 app = Flask(__name__)
+CORS(app)  # This will enable CORS for all routes
 
 @app.route('/translate-sign-video', methods=['POST'])
 def translate_route():
