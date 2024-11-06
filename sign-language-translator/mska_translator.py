@@ -22,7 +22,6 @@ def mska_translator():
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
             results = json.load(file)
-            print(hello_world())
     except IOError as e:
         print('Error reading file:', e)
         return jsonify({'error': 'Error reading file'}), 500
