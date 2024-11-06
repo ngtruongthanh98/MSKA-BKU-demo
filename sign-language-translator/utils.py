@@ -15,7 +15,7 @@ def get_training_result(file_path, config_path, resume_path, input_keypoints_pat
     try:
         result = subprocess.run(command, capture_output=True, text=True, check=True)
 
-        # print('test result: ', result)
+        print('test result: ', result)
 
         # return result.stdout
 
