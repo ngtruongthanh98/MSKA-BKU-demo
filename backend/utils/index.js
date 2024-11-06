@@ -5,7 +5,7 @@ const ffmpeg = require('fluent-ffmpeg');
 
 const convertVideoToFrames = (videoPath, videoName) => {
   return new Promise((resolve, reject) => {
-    const outputDir = path.join(__dirname, '..', 'frames', videoName);
+    const outputDir = path.join(__dirname, '..', 'images', videoName);
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
     }
@@ -18,7 +18,7 @@ const convertVideoToFrames = (videoPath, videoName) => {
       .on('error', (err) => {
         reject(err);
       })
-      .save(`${outputDir}/frame%04d.png`);
+      .save(`${outputDir}/images%04d.png`);
   });
 };
 
