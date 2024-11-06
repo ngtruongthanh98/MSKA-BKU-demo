@@ -12,7 +12,7 @@ def translate_route():
 
 if __name__ == '__main__':
     # auth_token = getpass.getpass("Enter your ngrok authtoken, which can be copied from https://dashboard.ngrok.com/get-started/your-authtoken: ")
-    auth_token = '2PtzIXwPLLVl1tSapKtcCyEiOGI_35HYt93wuTTwUbyiTEA3m'
+    auth_token = '2oSxR6sYqEk9YGsvagepltCTLQx_2igWYPxQQyBsDPbE8hskv'
     conf.get_default().auth_token = auth_token
 
     # Open a ngrok tunnel to the HTTP server
