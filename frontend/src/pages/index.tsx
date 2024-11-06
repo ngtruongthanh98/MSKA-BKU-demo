@@ -30,7 +30,10 @@ const IndexPage: React.FC = () => {
       const recognizedText = await recognizeSignLanguage(file!);
       const translatedText = await translateToSpokenLanguage(recognizedText);
 
-      setTranslation(translatedText);
+      const capitalized =
+      translatedText.charAt(0).toUpperCase() + translatedText.slice(1);
+
+      setTranslation(capitalized);
     } catch (error) {
       console.error('Error during translation process:', error);
     } finally {
