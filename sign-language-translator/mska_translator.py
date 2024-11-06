@@ -16,33 +16,41 @@ def mska_translator():
     if not video_name:
         return jsonify({'error': 'videoName is required'}), 400
 
-    # # Construct the file path
-    # file_path = os.path.join(os.path.dirname(__file__), '../data/results.json')
-
-    # try:
-    #     with open(file_path, 'r', encoding='utf-8') as file:
-    #         results = json.load(file)
-    #         print(hello_world())
-    # except IOError as e:
-    #     print('Error reading file:', e)
-    #     return jsonify({'error': 'Error reading file'}), 500
-    # except json.JSONDecodeError as e:
-    #     print('Error parsing JSON:', e)
-    #     return jsonify({'error': 'Error parsing JSON'}), 500
+    # Construct the file path
+    file_path = os.path.join(os.path.dirname(__file__), '../data/results.json')
 
     try:
-        results = get_training_result(file_path, config_path, resume_path, input_keypoints_path)
+        with open(file_path, 'r', encoding='utf-8') as file:
+            results = json.load(file)
+            print(hello_world())
+    except IOError as e:
+        print('Error reading file:', e)
+        return jsonify({'error': 'Error reading file'}), 500
+    except json.JSONDecodeError as e:
+        print('Error parsing JSON:', e)
+        return jsonify({'error': 'Error parsing JSON'}), 500
 
-        result = next((entry for entry in results if video_name in entry['name']), None)
 
-        if result:
-            return result['txt_hyp']
-        else:
-            return jsonify({'error': 'Video name not found'}), 404
+    result = next((entry for entry in results if video_name in entry['name']), None)
 
-    except Exception as e:
-        print('Error occurred:', e)
-        return jsonify({'error': 'Error occurred'}), 500
+    if result:
+        return result['txt_hyp']
+    else:
+        return jsonify({'error': 'Video name not found'}), 404
+
+    # try:
+    #     results = get_training_result(file_path, config_path, resume_path, input_keypoints_path)
+
+        # result = next((entry for entry in results if video_name in entry['name']), None)
+
+    #     if result:
+    #         return result['txt_hyp']
+    #     else:
+    #         return jsonify({'error': 'Video name not found'}), 404
+
+    # except Exception as e:
+    #     print('Error occurred:', e)
+    #     return jsonify({'error': 'Error occurred'}), 500
 
 
 
