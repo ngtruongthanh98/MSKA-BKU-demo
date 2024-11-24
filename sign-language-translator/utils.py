@@ -13,13 +13,8 @@ def get_training_result(file_path, config_path, resume_path, input_keypoints_pat
     print('file_path: ', file_path)
 
     try:
-        result = subprocess.run(command, capture_output=True, text=True, check=True)
+        subprocess.run(command, capture_output=True, text=True, check=True)
 
-        print('test result: ', result)
-
-        # return result.stdout
-
-        # return json file in ../result/predicted_result.json
         with open('../result/predicted_result.json', 'r', encoding='utf-8') as file:
             results = json.load(file)
 
