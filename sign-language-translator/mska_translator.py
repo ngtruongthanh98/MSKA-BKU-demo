@@ -8,10 +8,10 @@ def mska_translator():
     video_name = data.get('videoName')
     image_array = data.get('imageArray')
 
-    file_path = '../../baseline-MSKA/train.py'
-    config_path = '../../baseline-MSKA/configs/phoenix-2014t_s2t.yaml'
-    resume_path = '../../pretrained_models/Phoenix-2014T_SLT/best.pth'
-    input_keypoints_path = os.path.join('../../HRNet-keypoints', video_name, 'src_input.pkl')
+    file_path = '../model/baseline-MSKA/train.py'
+    config_path = '../model/baseline-MSKA/configs/phoenix-2014t_s2t.yaml'
+    resume_path = '../model/baseline-MSKA/pretrained_models/Phoenix-2014T_SLT/best.pth'
+    input_keypoints_path = os.path.join('../frames2keypoints', video_name, 'src_input.pkl')
 
     if not video_name:
         return jsonify({'error': 'videoName is required'}), 400

@@ -1,4 +1,5 @@
 import getpass
+import os
 import threading
 from flask import Flask
 from pyngrok import ngrok, conf
@@ -11,8 +12,9 @@ def translate_route():
     return mska_translator()
 
 if __name__ == '__main__':
-    # auth_token = getpass.getpass("Enter your ngrok authtoken, which can be copied from https://dashboard.ngrok.com/get-started/your-authtoken: ")
-    auth_token = '2pIeVoI324mUjdWQOpgDY6cUNoM_b6kBN8TzXGGX6W7W7bKB'
+    auth_token = os.environ.get('NGROK_AUTHTOKEN') or getpass.getpass(
+        "Enter your ngrok authtoken, which can be copied from https://dashboard.ngrok.com/get-started/your-authtoken: "
+    )
     conf.get_default().auth_token = auth_token
 
     # Open a ngrok tunnel to the HTTP server
