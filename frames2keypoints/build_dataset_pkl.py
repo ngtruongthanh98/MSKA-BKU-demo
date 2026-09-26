@@ -5,38 +5,46 @@ in the exact schema model/baseline-MSKA/datasets.py:S2T_Dataset expects:
     { video_name: {"name": str, "gloss": str, "text": str,
                    "num_frames": int, "keypoint": np.ndarray[T,133,3]} , ... }
 
-load_annotations() below is a STUB: PHOENIX-2014T's official annotation file
-format was not verified against this repo's actual data, so plug in your own
-parser for whatever annotation file the release gives you (an
-"id|name|...|annotation"-style delimited file per the RWTH-PHOENIX-2014-T
-release) rather than trusting a hardcoded column layout here.
+load_annotations() parses the official RWTH-PHOENIX-2014-T annotation file,
+named PHOENIX-2014-T.{split}.corpus.csv in the release's annotations/manual/
+directory: a "|"-delimited CSV with a header row and columns
+name|video|start|end|speaker|orth|translation, where "orth" is the gloss
+sequence and "translation" is the German sentence. The "video" column looks
+like "01April_2010_Thursday_heute-6698/1/*.png" (a camera-view index and a
+frame-image glob tacked onto the plain video folder name) -- verified against
+the dataset's HuggingFace `datasets` loading script rather than assumed.
 """
 import argparse
+import csv
 import glob
 import os
 import pickle
 
 
-def load_annotations(annotation_path):
-    """Return {video_name: {"gloss": str, "text": str}}.
-
-    Replace this with a real parser for your annotation file -- format not
-    verified here, see module docstring.
-    """
-    raise NotImplementedError(
-        "Plug in a parser for your PHOENIX-2014T annotation file: "
-        f"{annotation_path} -> {{video_name: {{'gloss': ..., 'text': ...}}}}"
-    )
+def load_annotations(annotation_path, split):
+    """Return {video_name: {"gloss": str, "text": str}}, with video_name
+    normalized to "{split}/{video_folder_name}" to match this project's
+    existing naming convention (see data/results.json, data/reg_results.json)."""
+    annotations = {}
+    with open(annotation_path, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f, delimiter="|", quoting=csv.QUOTE_NONE)
+        for row in reader:
+            base_name = row["video"].split("/1/")[0]
+            video_name = base_name if base_name.startswith(f"{split}/") else f"{split}/{base_name}"
+            annotations[video_name] = {"gloss": row["orth"], "text": row["translation"]}
+    return annotations
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--keypoints-dir", required=True, help="output dir from extract_keypoints_rtmpose.py")
-    parser.add_argument("--annotation-path", required=True)
+    parser.add_argument("--annotation-path", required=True,
+                         help="e.g. annotations/manual/PHOENIX-2014-T.train.corpus.csv")
+    parser.add_argument("--split", required=True, choices=["train", "dev", "test"])
     parser.add_argument("--out-path", required=True, help="e.g. data/Phoenix-2014T/Phoenix-2014T.train")
     args = parser.parse_args()
 
-    annotations = load_annotations(args.annotation_path)
+    annotations = load_annotations(args.annotation_path, args.split)
 
     dataset = {}
     for kp_path in sorted(glob.glob(os.path.join(args.keypoints_dir, "*.pkl"))):

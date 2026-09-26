@@ -10,9 +10,14 @@ project's own frame-serving convention, e.g. backend/controllers/videoToFramesCo
 
 Usage:
     python extract_keypoints_rtmpose.py \
-        --frames-root data/Phoenix-2014T/frames \
+        --frames-root data/Phoenix-2014T/frames/test \
+        --split test \
         --out-dir data/Phoenix-2014T/keypoints \
         --pose2d wholebody
+
+Output sample names are prefixed "{split}/{video_name}" to match this
+project's existing convention (data/results.json, data/reg_results.json) and
+what build_dataset_pkl.py's annotation parser produces.
 
 --pose2d accepts either the documented, version-stable MMPose alias
 "wholebody" (-> rtmpose-m, ~65 AP on COCO-WholeBody, safe default) or an
@@ -61,7 +66,9 @@ def extract_video_keypoints(inferencer, frame_paths):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--frames-root", required=True)
+    parser.add_argument("--frames-root", required=True,
+                         help="directory containing one subfolder of frames per video, for this split only")
+    parser.add_argument("--split", required=True, choices=["train", "dev", "test"])
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--pose2d", default="wholebody",
                          help="MMPose alias (e.g. 'wholebody') or explicit config path for RTMW")
@@ -71,18 +78,19 @@ def main():
     inferencer = MMPoseInferencer(pose2d=args.pose2d)
 
     os.makedirs(args.out_dir, exist_ok=True)
-    video_names = sorted(d for d in os.listdir(args.frames_root)
-                          if os.path.isdir(os.path.join(args.frames_root, d)))
+    folder_names = sorted(d for d in os.listdir(args.frames_root)
+                           if os.path.isdir(os.path.join(args.frames_root, d)))
 
-    for video_name in video_names:
-        video_dir = os.path.join(args.frames_root, video_name)
+    for folder_name in folder_names:
+        video_name = f"{args.split}/{folder_name}"
+        video_dir = os.path.join(args.frames_root, folder_name)
         frame_paths = list_frame_paths(video_dir)
         if not frame_paths:
             print(f"skip {video_name}: no frames found")
             continue
         keypoints = extract_video_keypoints(inferencer, frame_paths)
 
-        out_path = os.path.join(args.out_dir, f"{video_name.replace('/', '-')}.pkl")
+        out_path = os.path.join(args.out_dir, f"{folder_name}.pkl")
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
         with open(out_path, "wb") as f:
             # stored as (T, J, C); S2T_Dataset.__getitem__ does .permute(2, 0, 1) -> (C, T, J),
