@@ -1,0 +1,167 @@
+[
+  {
+    "name": "test/01October_2010_Friday_tagesschau-2701",
+    "split": "test",
+    "glossHyp": "ELF VOGEL",
+    "glossRef": "AM-TAG ELF VOGEL LAND",
+    "textHyp": "am tag elf grad im vogtland und einundzwanzig grad am oberrhein .",
+    "textRef": "am tag elf grad im vogtland und einundzwanzig grad am oberrhein .",
+    "gtncFlag": true,
+    "numErr": 2,
+    "category": "gtnc_warning"
+  },
+  {
+    "name": "test/20July_2010_Tuesday_heute-5254",
+    "split": "test",
+    "glossHyp": "KUESTE IX DREI GRAD",
+    "glossRef": "KUESTE IX DREISSIG GRAD",
+    "textHyp": "an der küste bis dreißig grad .",
+    "textRef": "und selbst auch im küstenbereich geht es auch nahe an die dreißig grad heran .",
+    "gtncFlag": true,
+    "numErr": 1,
+    "category": "gtnc_warning"
+  },
+  {
+    "name": "test/24September_2009_Thursday_heute-6084",
+    "split": "test",
+    "glossHyp": "MORGEN IX SIEBZEHN GRAD",
+    "glossRef": "MORGEN IX SIEBZEHN GRAD",
+    "textHyp": "dort morgen bis siebzehn an der küste frische siebzehn grad .",
+    "textRef": "morgen erwarten uns dann an der küste werte von siebzehn grad .",
+    "gtncFlag": true,
+    "numErr": 0,
+    "category": "gtnc_warning"
+  },
+  {
+    "name": "test/09June_2010_Wednesday_heute-8260",
+    "split": "test",
+    "glossHyp": "NACHT HOCH GRAD NEIN NEGALP-AUCH",
+    "glossRef": "NACHT UNTER ZWANZIG GRAD NEG-WAHRSCHEINLICH KAUM",
+    "textHyp": "in der nacht sind auch nur vier grad höchsttemperaturen möglich .",
+    "textRef": "die kommende nacht teilweise nicht unter zwanzig grad in einigen städten .",
+    "gtncFlag": true,
+    "numErr": 4,
+    "category": "gtnc_warning"
+  },
+  {
+    "name": "test/13September_2010_Monday_tagesschau-4592",
+    "split": "test",
+    "glossHyp": "WETTER MORGEN DIENSTAG VIERZEHN SEPTEMBER",
+    "glossRef": "WETTER MORGEN SIE DIENSTAG VIERZEHN SEPTEMBER",
+    "textHyp": "und nun die wettervorhersage für morgen dienstag den vierzehnten september .",
+    "textRef": "und nun die wettervorhersage für morgen dienstag den vierzehnten september .",
+    "gtncFlag": true,
+    "numErr": 1,
+    "category": "gtnc_warning"
+  },
+  {
+    "name": "test/09November_2010_Tuesday_heute-5840",
+    "split": "test",
+    "glossHyp": "JETZT SCHOEN ABEND TSCHÜSS",
+    "glossRef": "JETZT SCHOEN ABEND TSCHÜSS",
+    "textHyp": "jetzt wünsche ich ihnen noch einen schönen abend .",
+    "textRef": "jetzt wünsche ich ihnen noch einen schönen abend .",
+    "gtncFlag": false,
+    "numErr": 0,
+    "category": "perfect_recognition"
+  },
+  {
+    "name": "test/07February_2011_Monday_heute-4658",
+    "split": "test",
+    "glossHyp": "GUT ABEND LIEB ZUSCHAUER",
+    "glossRef": "GUT ABEND LIEB ZUSCHAUER",
+    "textHyp": "guten abend liebe zuschauer .",
+    "textRef": "guten abend liebe zuschauer .",
+    "gtncFlag": false,
+    "numErr": 0,
+    "category": "perfect_recognition"
+  },
+  {
+    "name": "test/28January_2010_Thursday_heute-2882",
+    "split": "test",
+    "glossHyp": "GUT ABEND LIEB DU ZUSCHAUER",
+    "glossRef": "GUT ABEND LIEB DU ZUSCHAUER",
+    "textHyp": "guten abend liebe zuschauer .",
+    "textRef": "guten abend liebe zuschauer .",
+    "gtncFlag": false,
+    "numErr": 0,
+    "category": "perfect_recognition"
+  },
+  {
+    "name": "test/04January_2010_Monday_heute-7395",
+    "split": "test",
+    "glossHyp": "GUT ABEND LIEB ZUSCHAUER BEGRÜSSEN",
+    "glossRef": "GUT ABEND LIEB ZUSCHAUER BEGRÜSSEN",
+    "textHyp": "guten abend liebe zuschauer .",
+    "textRef": "guten abend liebe zuschauer .",
+    "gtncFlag": false,
+    "numErr": 0,
+    "category": "perfect_recognition"
+  },
+  {
+    "name": "test/04January_2010_Monday_tagesschau-8544",
+    "split": "test",
+    "glossHyp": "MORGEN WETTER WIE-AUSSEHEN DIENSTAG FÜNFTE JANUAR",
+    "glossRef": "MORGEN WETTER WIE-AUSSEHEN DIENSTAG FÜNFTE JANUAR",
+    "textHyp": "und nun die wettervorhersage für morgen dienstag den fünften januar .",
+    "textRef": "und nun die wettervorhersage für morgen dienstag den fünften januar .",
+    "gtncFlag": false,
+    "numErr": 0,
+    "category": "perfect_recognition"
+  },
+  {
+    "name": "test/17September_2010_Friday_tagesschau-3413",
+    "split": "test",
+    "glossHyp": "KOMMEN GUT",
+    "glossRef": "GUT FREUNDLICH SONNE GUT",
+    "textHyp": "liebe zuschauer guten abend .",
+    "textRef": "es sorgt morgen dort für ruhiges freundliches wetter .",
+    "gtncFlag": false,
+    "numErr": 3,
+    "category": "typical_errors"
+  },
+  {
+    "name": "test/16November_2009_Monday_tagesschau-3106",
+    "split": "test",
+    "glossHyp": "MEHR FREUNDLICH",
+    "glossRef": "VON-UNTEN NACH-NORD MEHR FREUNDLICH",
+    "textHyp": "am freundlichsten wird es im nordwesten .",
+    "textRef": "von süden wird es tag für tag freundlicher .",
+    "gtncFlag": false,
+    "numErr": 2,
+    "category": "typical_errors"
+  },
+  {
+    "name": "test/21April_2010_Wednesday_heute-3109",
+    "split": "test",
+    "glossHyp": "NACHT FROST",
+    "glossRef": "JETZT NACHT KOMMEN FROST",
+    "textHyp": "in den nächten muss verbreitet mit frost gerechnet werden .",
+    "textRef": "eine frostig kalte nacht liegt vor uns .",
+    "gtncFlag": false,
+    "numErr": 2,
+    "category": "typical_errors"
+  },
+  {
+    "name": "test/29August_2009_Saturday_tagesschau-5019",
+    "split": "test",
+    "glossHyp": "SUED WOLKE",
+    "glossRef": "SUED WAHRSCHEINLICH WOLKE KLAR",
+    "textHyp": "im süden ist es mal wolkig mal klar .",
+    "textRef": "in der südhälfte ist es teils wolkig teils klar .",
+    "gtncFlag": false,
+    "numErr": 2,
+    "category": "typical_errors"
+  },
+  {
+    "name": "test/29March_2010_Monday_tagesschau-8388",
+    "split": "test",
+    "glossHyp": "IN-KOMMEND KOMMEN",
+    "glossRef": "IN-KOMMEND DANN NÄHERN KALT",
+    "textHyp": "in den nächsten tagen bestimmt das tief über großbritannien unser wetter .",
+    "textRef": "die luft die in den kommenden tagen zu uns strömt ist dann kälter .",
+    "gtncFlag": false,
+    "numErr": 3,
+    "category": "typical_errors"
+  }
+]

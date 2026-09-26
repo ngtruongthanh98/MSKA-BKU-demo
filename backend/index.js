@@ -24,6 +24,9 @@ app.use('/api/get-video', getVideoRoute);
 const videoToFramesRoute = require('./routes/videoToFramesRoute');
 app.use('/api/video-to-frames', videoToFramesRoute);
 
+const demoRoute = require('./routes/demoRoute');
+app.use('/api/demo', demoRoute);
+
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });

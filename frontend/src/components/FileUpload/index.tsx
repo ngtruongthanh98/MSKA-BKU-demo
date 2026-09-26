@@ -18,7 +18,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload }) => {
             e.preventDefault();
             setFileEnter(true);
           }}
-          onDragLeave={(e) => {
+          onDragLeave={() => {
             setFileEnter(false);
           }}
           onDragEnd={(e) => {

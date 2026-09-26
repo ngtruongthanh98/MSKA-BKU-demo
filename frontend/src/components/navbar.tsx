@@ -19,7 +19,7 @@ import {
   GithubIcon,
   SearchIcon,
 } from "@/components/icons";
-import { Logo, BachKhoaLogo } from "@/components/icons";
+import { BachKhoaLogo } from "@/components/icons";
 import LanguageToggle from './LanguageToggle'
 
 export const Navbar = () => {
