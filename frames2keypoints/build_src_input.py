@@ -10,12 +10,13 @@ padding/masking by hand and risking a subtle mismatch, this script builds a
 one-entry dataset file and runs it through the project's own S2T_Dataset and
 collate_fn, so it's exercising the exact same tested code path training uses.
 
-Usage:
+Usage (run from inside frames2keypoints/, matching the server's expectation
+of frames2keypoints/<video_name>/src_input.pkl with NO split prefix -- an
+uploaded demo video has no train/dev/test split to begin with):
     python build_src_input.py \
-        --video-name test/03February_2010_Wednesday_heute-2356 \
+        --video-name 03February_2010_Wednesday_heute-2356 \
         --frames-dir /path/to/frames/for/this/one/video \
         --config ../model/baseline-MSKA/configs/phoenix-2014t_s2t.yaml \
-        --out-dir .. \
         --pose2d wholebody
 
 Must run in the same environment as the rest of the demo: baseline-MSKA's
@@ -47,6 +48,17 @@ PLACEHOLDER_GLOSS = "unk"
 PLACEHOLDER_TEXT = "unk"
 
 
+def strip_split_prefix(video_name):
+    """The server (mska_translator.py) passes a bare video name with no
+    train/dev/test prefix, so the output directory must never include one --
+    even if --video-name was given with one for internal bookkeeping."""
+    for split in ("train", "dev", "test"):
+        prefix = f"{split}/"
+        if video_name.startswith(prefix):
+            return video_name[len(prefix):]
+    return video_name
+
+
 def build_single_sample_dataset_file(video_name, keypoint_tensor, num_frames, tmp_path):
     sample = {
         video_name: {
@@ -63,10 +75,11 @@ def build_single_sample_dataset_file(video_name, keypoint_tensor, num_frames, tm
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--video-name", required=True, help='e.g. "test/03February_2010_Wednesday_heute-2356"')
+    parser.add_argument("--video-name", required=True, help='bare name, no split prefix, e.g. "03February_2010_Wednesday_heute-2356"')
     parser.add_argument("--frames-dir", required=True, help="directory of this one video's frame images")
     parser.add_argument("--config", required=True, help="e.g. ../model/baseline-MSKA/configs/phoenix-2014t_s2t.yaml")
-    parser.add_argument("--out-dir", default="..", help="src_input.pkl is written to <out-dir>/<video_name>/")
+    parser.add_argument("--out-dir", default=".",
+                         help="src_input.pkl is written to <out-dir>/<video_name>/ (default: frames2keypoints/ itself)")
     parser.add_argument("--pose2d", default="wholebody",
                          help="MMPose alias (e.g. 'wholebody') or explicit config path for RTMW")
     args = parser.parse_args()
@@ -94,7 +107,7 @@ def main():
     finally:
         os.remove(tmp_pkl)
 
-    out_dir = os.path.join(args.out_dir, args.video_name)
+    out_dir = os.path.join(args.out_dir, strip_split_prefix(args.video_name))
     os.makedirs(out_dir, exist_ok=True)
     out_path = os.path.join(out_dir, "src_input.pkl")
     with open(out_path, "wb") as f:

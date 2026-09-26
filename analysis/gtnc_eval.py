@@ -3,7 +3,7 @@ import random
 
 from common import load_predictions, by_split
 from align import sentence_wer
-from nu import (nu_gloss, nu_text, gtnc_flag, contains_number_gloss, contains_number_text,
+from nu import (nu_text, gtnc_flag, contains_number_text,
                 number_tokens_text, GLOSS_UNITS, GLOSS_TEENS, GLOSS_TENS)
 
 GLOSS_NUMBER_WORDS = set(GLOSS_UNITS) | set(GLOSS_TEENS) | set(GLOSS_TENS)
@@ -82,9 +82,9 @@ def gtnc_table(records, split, variant="full"):
         if variant == "no_signs":
             flags.append(gtnc_flag(r["gls_hyp"], r["txt_hyp"], use_signs=False))
         elif variant == "oracle_glosses":
-            ng = collections.Counter(abs(v) for v in nu_gloss(r["gls_ref"]).elements())
-            nt = collections.Counter(abs(v) for v in nu_text(r["txt_hyp"]).elements())
-            flags.append(ng != nt)
+            # same check as "full" (signed values + degenerate-range rule), just with
+            # the reference gloss substituted for the recognizer's hypothesis gloss
+            flags.append(gtnc_flag(r["gls_ref"], r["txt_hyp"]))
         else:
             flags.append(gtnc_flag(r["gls_hyp"], r["txt_hyp"]))
 

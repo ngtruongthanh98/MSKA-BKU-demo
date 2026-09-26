@@ -29,9 +29,21 @@ https://mmpose.readthedocs.io/en/latest/model_zoo/wholebody_2d_keypoint.html
 import argparse
 import os
 import pickle
+import tempfile
 
 import numpy as np
 import torch
+from PIL import Image
+
+# PHOENIX-2014T's native frame resolution. S2T_Dataset.augment_preprocess_inputs
+# divides keypoint x/y coordinates by exactly these numbers (self.w, self.h) to
+# normalize them, so keypoints must be extracted in that same pixel space -- a
+# frame at any other resolution silently mis-normalizes (doesn't error, just
+# feeds the model coordinates in the wrong range). The official PHOENIX-2014T
+# frames already are this size, so resizing to it is a no-op there; it's
+# required for any other video, e.g. a live demo upload, which will essentially
+# never already be 210x260.
+TARGET_FRAME_SIZE = (210, 260)  # (width, height)
 
 
 def list_frame_paths(video_dir):
@@ -39,28 +51,37 @@ def list_frame_paths(video_dir):
     return [os.path.join(video_dir, f) for f in names]
 
 
-def extract_video_keypoints(inferencer, frame_paths):
+def resize_frame(frame_path, out_path, size=TARGET_FRAME_SIZE):
+    with Image.open(frame_path) as img:
+        img.convert("RGB").resize(size, Image.BILINEAR).save(out_path)
+
+
+def extract_video_keypoints(inferencer, frame_paths, target_size=TARGET_FRAME_SIZE):
     """Returns an (T, 133, 3) float32 array: [:, :, :2]=xy, [:, :, 2]=confidence."""
     T = len(frame_paths)
     keypoints = np.zeros((T, 133, 3), dtype=np.float32)
     last_valid = None
-    for t, frame_path in enumerate(frame_paths):
-        result_generator = inferencer(frame_path)
-        result = next(result_generator)
-        instances = result["predictions"][0]
-        if not instances:
-            # no person detected in this frame: carry forward the last valid pose
-            # rather than zeroing it out, since a dropped detection is far more
-            # likely than the signer actually vanishing from a weather-forecast clip
-            if last_valid is not None:
-                keypoints[t] = last_valid
-            continue
-        best = max(instances, key=lambda inst: float(np.mean(inst["keypoint_scores"])))
-        xy = np.asarray(best["keypoints"], dtype=np.float32)         # (133, 2)
-        scores = np.asarray(best["keypoint_scores"], dtype=np.float32)  # (133,)
-        frame_kp = np.concatenate([xy, scores[:, None]], axis=1)     # (133, 3)
-        keypoints[t] = frame_kp
-        last_valid = frame_kp
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        for t, frame_path in enumerate(frame_paths):
+            resized_path = os.path.join(tmp_dir, f"{t:06d}.png")
+            resize_frame(frame_path, resized_path, target_size)
+
+            result_generator = inferencer(resized_path)
+            result = next(result_generator)
+            instances = result["predictions"][0]
+            if not instances:
+                # no person detected in this frame: carry forward the last valid pose
+                # rather than zeroing it out, since a dropped detection is far more
+                # likely than the signer actually vanishing from a weather-forecast clip
+                if last_valid is not None:
+                    keypoints[t] = last_valid
+                continue
+            best = max(instances, key=lambda inst: float(np.mean(inst["keypoint_scores"])))
+            xy = np.asarray(best["keypoints"], dtype=np.float32)         # (133, 2)
+            scores = np.asarray(best["keypoint_scores"], dtype=np.float32)  # (133,)
+            frame_kp = np.concatenate([xy, scores[:, None]], axis=1)     # (133, 3)
+            keypoints[t] = frame_kp
+            last_valid = frame_kp
     return keypoints
 
 
