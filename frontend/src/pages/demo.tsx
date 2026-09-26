@@ -14,6 +14,13 @@ const DemoPage: React.FC = () => {
   const [result, setResult] = useState<DemoResult | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [videoAvailable, setVideoAvailable] = useState<boolean>(true);
+
+  const bareName = selected.replace(/^test\//, '');
+
+  useEffect(() => {
+    setVideoAvailable(true);
+  }, [selected]);
 
   useEffect(() => {
     listDemoVideos()
@@ -67,11 +74,23 @@ const DemoPage: React.FC = () => {
         {error && <div className="mt-2 text-red-600">{error}</div>}
         {loading && <div className="mt-2 text-blue-500">Loading...</div>}
 
-        <div className="w-full p-6 mt-2 text-center border-2 border-dashed rounded-lg text-default-400 border-default-200">
-          Video playback needs a local PHOENIX-2014T sample clip for this name under
-          frontend/public/demo-media/ &mdash; the original hosted video/frame buckets are
-          no longer publicly reachable. Showing recognized gloss and translation below.
-        </div>
+        {videoAvailable ? (
+          <video
+            key={selected}
+            className="mx-auto mt-2 rounded-lg shadow-md max-h-80"
+            src={`/demo-media/${bareName}/clip.mp4`}
+            controls
+            loop
+            onError={() => setVideoAvailable(false)}
+          />
+        ) : (
+          <div className="w-full p-6 mt-2 text-center border-2 border-dashed rounded-lg text-default-400 border-default-200">
+            No local sample clip for this video yet. Drop one at
+            frontend/public/demo-media/{bareName}/clip.mp4 to enable playback
+            &mdash; the original hosted video/frame buckets are no longer
+            publicly reachable. Showing recognized gloss and translation below.
+          </div>
+        )}
 
         {result && (
           <div className="w-full p-6 mt-2 bg-gray-100 rounded-lg shadow-md dark:bg-gray-800">
